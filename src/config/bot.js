@@ -547,3 +547,22 @@ export default botConfig;
 
 
 
+voiceSystem: {
+  // ID канала "➕ Создать"
+  createChannelId: "123456789012345678",
+
+  // ID категории
+  categoryId: "123456789012345678",
+
+  // Удалять пустые каналы
+  autoDelete: true,
+
+  // Название комнаты
+  channelName: "{user}'s room",
+
+  // Создавать панель управления
+  createControlChannel: true,
+
+  // Название текстового канала
+  controlChannelName: "control-{user}",
+},
