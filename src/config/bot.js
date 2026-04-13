@@ -460,6 +460,96 @@ export const botConfig = {
     utility: true,
     community: true,
     fun: true,
+    // ======================
+// КОМАНДА /panel
+// ======================
+client.on("interactionCreate", async (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    if (interaction.commandName === "panel") {
+      const embed = new EmbedBuilder()
+        .setTitle("🎛️ Управление комнатой")
+        .setDescription(`
+👥 — Лимит  
+🔒 — Закрыть  
+🔓 — Открыть  
+🚫 — Забрать доступ  
+✅ — Выдать доступ  
+
+✏️ — Переименовать  
+👑 — Передать владельца  
+🥾 — Кик  
+
+🔇 — Мут  
+🔊 — Размут  
+
+🙈 — Скрыть  
+👁️ — Показать  
+        `)
+        .setColor(0x5865f2);
+
+      const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId("lock").setEmoji("🔒").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId("unlock").setEmoji("🔓").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId("hide").setEmoji("🙈").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId("show").setEmoji("👁️").setStyle(ButtonStyle.Secondary)
+      );
+
+      await interaction.reply({
+        embeds: [embed],
+        components: [row],
+      });
+    }
+  }
+
+  // ======================
+  // КНОПКИ
+  // ======================
+  if (interaction.isButton()) {
+    const channel = interaction.member.voice.channel;
+
+    if (!channel) {
+      return interaction.reply({
+        content: "❌ Ты не в голосовом канале",
+        ephemeral: true,
+      });
+    }
+
+    switch (interaction.customId) {
+      case "lock":
+        await channel.permissionOverwrites.edit(
+          interaction.guild.roles.everyone,
+          { Connect: false }
+        );
+        return interaction.reply({ content: "🔒 Комната закрыта", ephemeral: true });
+
+      case "unlock":
+        await channel.permissionOverwrites.edit(
+          interaction.guild.roles.everyone,
+          { Connect: true }
+        );
+        return interaction.reply({ content: "🔓 Комната открыта", ephemeral: true });
+
+      case "hide":
+        await channel.permissionOverwrites.edit(
+          interaction.guild.roles.everyone,
+          { ViewChannel: false }
+        );
+        return interaction.reply({ content: "🙈 Комната скрыта", ephemeral: true });
+
+      case "show":
+        await channel.permissionOverwrites.edit(
+          interaction.guild.roles.everyone,
+          { ViewChannel: true }
+        );
+        return interaction.reply({ content: "👁️ Комната видна", ephemeral: true });
+    }
+  }
+});
+
+// ======================
+// ЛОГИН
+// ======================
+client.login(process.env.TOKEN);
   },
 };
 
